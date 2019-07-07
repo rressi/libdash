@@ -3,73 +3,91 @@ language: c++
 matrix:
   include:
 
-    # UBUNTU - DEBUG - GCC
+    # UBUNTU - DEBUG
     - os: linux
       compiler: gcc
       dist: bionic
       env:
         - BUILD_TYPE=Debug
-    - os: linux
-      compiler: gcc
-      dist: xenial
-      env:
-        - BUILD_TYPE=Debug
-    - os: linux
-      compiler: gcc
-      dist: trusty
-      env:
-        - BUILD_TYPE=Debug
+      script: &linux_script
+        - |
+          set -e
+          mkdir -p libdash/cmake-build-${BUILD_TYPE}
+          cd libdash/cmake-build-${BUILD_TYPE}
 
-    # UBUNTU - DEBUG - CLANG
-    - os: linux
-      compiler: clang
-      dist: bionic
-      env:
-        - BUILD_TYPE=Debug
-    - os: linux
-      compiler: clang
-      dist: xenial
-      env:
-        - BUILD_TYPE=Debug
-    - os: linux
-      compiler: clang
-      dist: trusty
-      env:
-        - BUILD_TYPE=Debug
+          cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+          cmake --build . --target all
 
-    # UBUNTU - RELEASE - GCC
-    - os: linux
-      compiler: gcc
-      dist: bionic
-      env:
-        - BUILD_TYPE=Release
+          export LD_LIBRARY_PATH=$(pwd)/bin
+          ./bin/libdash_networkpart_test
     - os: linux
       compiler: gcc
       dist: xenial
       env:
-        - BUILD_TYPE=Release
+        - BUILD_TYPE=Debug
+      script: *linux_script
     - os: linux
       compiler: gcc
       dist: trusty
       env:
-        - BUILD_TYPE=Release
+        - BUILD_TYPE=Debug
+      script: *linux_script
+    - os: linux
+      compiler: clang
+      dist: bionic
+      env:
+        - BUILD_TYPE=Debug
+      script: *linux_script
+    - os: linux
+      compiler: clang
+      dist: xenial
+      env:
+        - BUILD_TYPE=Debug
+      script: *linux_script
+    - os: linux
+      compiler: clang
+      dist: trusty
+      env:
+        - BUILD_TYPE=Debug
+      script: *linux_script
 
-    # UBUNTU - RELEASE - CLANG
+    # UBUNTU - RELEASE
+    - os: linux
+      compiler: gcc
+      dist: bionic
+      env:
+        - BUILD_TYPE=Release
+      script: *linux_script
+    - os: linux
+      compiler: gcc
+      dist: xenial
+      env:
+        - BUILD_TYPE=Release
+      script: *linux_script
+    - os: linux
+      compiler: gcc
+      dist: trusty
+      env:
+        - BUILD_TYPE=Release
+      script: *linux_script
     - os: linux
       compiler: clang
       dist: bionic
       env:
         - BUILD_TYPE=Release
+      script: *linux_script
     - os: linux
       compiler: clang
       dist: xenial
       env:
         - BUILD_TYPE=Release
+      script: *linux_script
     - os: linux
       compiler: clang
       dist: trusty
       env:
         - BUILD_TYPE=Release
+      script: *linux_script
 
     # OSX
     - os: osx
@@ -77,21 +95,42 @@ matrix:
       compiler: clang
       env:
         - BUILD_TYPE=Debug
+      script: &osx_script
+        - |
+          mkdir -p libdash/cmake-build-${BUILD_TYPE}
+          cd libdash/cmake-build-${BUILD_TYPE}
+
+          cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
+          cmake --build . --target all
+
+          ./bin/libdash_networkpart_test
     - os: osx
       osx_image: xcode10.2
       compiler: clang
       env:
         - BUILD_TYPE=Release
+      script: *osx_script
+
+    # Windows
+    - os: windows
+      language: shell
+      env:
+        - BUILD_TYPE=Debug
+      script: &windows_script
+        - |
+          set -e
+          mkdir -p libdash/cmake-build-${BUILD_TYPE}
+          cd libdash/cmake-build-${BUILD_TYPE}
+
+          cmake ..
+          cmake --build . --config ${BUILD_TYPE}
+
+          ./bin/${BUILD_TYPE}/libdash_networkpart_test.exe
+    - os: windows
+      language: shell
+      env:
+        - BUILD_TYPE=Release
+      script: *windows_script
 
 script:
-  - |
-      set -us
-
-      mkdir -p libdash/cmake-build-${BUILD_TYPE}
-      cd libdash/cmake-build-${BUILD_TYPE}
-      cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} ..
-
-      make
-
-      export LD_LIBRARY_PATH=$(pwd)/bin
-      ./bin/libdash_networkpart_test
+  - echo "DONE."
