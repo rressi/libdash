@@ -3,7 +3,7 @@ language: c++
 matrix:
   include:
 
-    # UBUNTU - DEBUG
+    # Ubuntu - DEBUG
     - os: linux
       compiler: gcc
       dist: bionic
@@ -27,12 +27,6 @@ matrix:
         - BUILD_TYPE=Debug
       script: *linux_script
     - os: linux
-      compiler: gcc
-      dist: trusty
-      env:
-        - BUILD_TYPE=Debug
-      script: *linux_script
-    - os: linux
       compiler: clang
       dist: bionic
       env:
@@ -41,17 +35,11 @@ matrix:
     - os: linux
       compiler: clang
       dist: xenial
-      env:
-        - BUILD_TYPE=Debug
-      script: *linux_script
-    - os: linux
-      compiler: clang
-      dist: trusty
       env:
         - BUILD_TYPE=Debug
       script: *linux_script
 
-    # UBUNTU - RELEASE
+    # Ubuntu - RELEASE
     - os: linux
       compiler: gcc
       dist: bionic
@@ -65,12 +53,6 @@ matrix:
         - BUILD_TYPE=Release
       script: *linux_script
     - os: linux
-      compiler: gcc
-      dist: trusty
-      env:
-        - BUILD_TYPE=Release
-      script: *linux_script
-    - os: linux
       compiler: clang
       dist: bionic
       env:
@@ -79,12 +61,6 @@ matrix:
     - os: linux
       compiler: clang
       dist: xenial
-      env:
-        - BUILD_TYPE=Release
-      script: *linux_script
-    - os: linux
-      compiler: clang
-      dist: trusty
       env:
         - BUILD_TYPE=Release
       script: *linux_script

@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5)
+
+set (CMAKE_CXX_STANDARD 11)
 
 unset(REQUIRED_LIBRARIES)
 unset(REQUIRED_INCLUDE_DIRS)
@@ -49,13 +51,12 @@ message(STATUS "REQUIRED_LIBRARIES:     ${REQUIRED_LIBRARIES}")
 message(STATUS "REQUIRED_INCLUDE_DIRS:  ${REQUIRED_INCLUDE_DIRS}")
 message(STATUS "REQUIRED_FILES:         ${REQUIRED_FILES}")
 
-include_directories(${REQUIRED_INCLUDE_DIRS})
-
 file(GLOB_RECURSE libdash_source *.cpp)
 
 add_library(dash SHARED ${libdash_source})
 
 target_link_libraries(dash ${REQUIRED_LIBRARIES})
+target_include_directories(dash PUBLIC ${REQUIRED_INCLUDE_DIRS})
 
 if (REQUIRED_FILES)
     foreach(_required_file ${REQUIRED_FILES})
